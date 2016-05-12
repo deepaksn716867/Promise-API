@@ -1,4 +1,4 @@
-package edu.asu.poly.dto;
+package edu.asu.poly.promise.dto;
 
 public class ActivePatientDTO {
 

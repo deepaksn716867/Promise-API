@@ -1,5 +1,10 @@
 package edu.asu.poly.promise.model;
 
+/**
+ * This class is the model for the table survey_instance
+ * @author Deepak S N
+ *
+ */
 public class SurveyInstance {
 	private int id;
 	private String StartTime;

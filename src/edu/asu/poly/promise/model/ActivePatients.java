@@ -1,5 +1,9 @@
 package edu.asu.poly.promise.model;
 
+/**
+ * This class is the model for the table Active_Patients.
+ * @author Deepak S N
+ */
 public class ActivePatients {
 	private int id;
 	private int pin;
