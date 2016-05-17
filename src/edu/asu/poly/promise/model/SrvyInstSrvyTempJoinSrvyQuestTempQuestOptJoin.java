@@ -5,6 +5,21 @@ public class SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin {
 	private SurveyInstance surveyInstance = null;
 	private SurveyTemplate surveyTemplate = null;
 	private JoinSurveysAndQuestions joinSurveysAndQuestions = null;
+	private QuestionOption questionoption = null;
+	private QuestionTemplate questiontemplate = null;
+	
+	public QuestionOption getQuestionoption() {
+		return questionoption;
+	}
+	public void setQuestionoption(QuestionOption questionoption) {
+		this.questionoption = questionoption;
+	}
+	public QuestionTemplate getQuestiontemplate() {
+		return questiontemplate;
+	}
+	public void setQuestiontemplate(QuestionTemplate questiontemplate) {
+		this.questiontemplate = questiontemplate;
+	}
 	public SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin() {
 		surveyInstance = new SurveyInstance();
 		surveyTemplate = new SurveyTemplate();
