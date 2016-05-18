@@ -1,5 +1,7 @@
 package edu.asu.poly.promise.dao;
 
+import edu.asu.poly.promise.model.SurveyInstance;
+
 /**
  * This is an abstract factory class for instantiating objects for the DAO.
  * @author Deepak S N
@@ -8,6 +10,7 @@ public abstract class DAOFactory {
 	public static final int MYSQL = 0;
 	public abstract CheckSurveyDAO getCheckSurveyDAO();
 	public abstract GetSurveyDAO getSurveyDAO();
+	public abstract SurveyInstanceDAO getSurveyInstanceDAO();
 	/**
 	 * This method is a static method which will return the corresponding factory object depending on the type.
 	 * @param type The type to get appropriate factory method.

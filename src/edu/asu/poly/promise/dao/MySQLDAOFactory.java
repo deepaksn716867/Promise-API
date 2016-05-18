@@ -1,6 +1,8 @@
 package edu.asu.poly.promise.dao;
 import edu.asu.poly.promise.dao.impl.MySQLCheckSurveyDAOImpl;
 import edu.asu.poly.promise.dao.impl.MySQLGetSurveyDAOImpl;
+import edu.asu.poly.promise.dao.impl.MySQLSurveyInstanceDAOImpl;
+import edu.asu.poly.promise.model.SurveyInstance;
 
 /**
  * This class is the DAO Factory implementation for MySQL.
@@ -18,5 +20,12 @@ public class MySQLDAOFactory extends DAOFactory {
 	{
 		return new MySQLGetSurveyDAOImpl();
 	}
+
+	@Override
+	public SurveyInstanceDAO getSurveyInstanceDAO() {
+		return new MySQLSurveyInstanceDAOImpl();
+	}
+	
+	
 
 }
