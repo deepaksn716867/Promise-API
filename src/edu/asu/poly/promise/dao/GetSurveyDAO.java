@@ -2,6 +2,7 @@ package edu.asu.poly.promise.dao;
 
 import java.util.ArrayList;
 import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
+import edu.asu.poly.promise.model.SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin;
 
 /**
  * This Interface is the DAO for the GetSurveys service endpoint
@@ -11,5 +12,5 @@ import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
 
 public interface GetSurveyDAO {
 	
-	public ArrayList<SrvyInstActivePatientSrvyTempJoin> getSurvey(Integer userPin) throws Exception;
+	public ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> getSurveys(Integer surveyInstanceId) throws Exception;
 }

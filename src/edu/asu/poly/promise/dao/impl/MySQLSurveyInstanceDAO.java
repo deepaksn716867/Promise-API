@@ -1,10 +1,5 @@
 package edu.asu.poly.promise.dao.impl;
-/**
- * The class is the implementation for the DAO getsurvey service endpoint.
- * It returns the survey for the particular survey instance id.
- * @see GetSurveyDAO
- * @author Deepak S N
- */
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,34 +7,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import edu.asu.poly.promise.dao.ConnectionFactory;
-import edu.asu.poly.promise.dao.GetSurveyDAO;
-import edu.asu.poly.promise.model.ActivePatients;
 import edu.asu.poly.promise.model.JoinSurveysAndQuestions;
 import edu.asu.poly.promise.model.QuestionOption;
 import edu.asu.poly.promise.model.QuestionTemplate;
-import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
 import edu.asu.poly.promise.model.SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin;
 import edu.asu.poly.promise.model.SurveyInstance;
 import edu.asu.poly.promise.model.SurveyTemplate;
 
-public class MySQLGetSurveyDAOImpl implements GetSurveyDAO
-{
-	/**
-	 * This method returns the survey for the particular surveyInstance Id.
-	 * @param surveyInstanceId The survey instance id for the survey to be retreived.
-	 * @return ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> An arrayList of all the survey questions  
-	 */
-	public ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> getSurveys(Integer surveyInstanceId) throws Exception
+public class MySQLSurveyInstanceDAO {
+	
+	public SurveyInstance findSurveyInstance(Integer surveyInstanceId)
 	{
+		{
 			ConnectionFactory connectionFactory= new ConnectionFactory();
 			Connection connection = connectionFactory.Get_Connection();
 			ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> getSurveysList = new ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin>();
 			try
 			{
-				String query = "SELECT * , qo.id AS qoid, si.id AS sid FROM survey_instance AS si JOIN survey_template AS st ON st.id = si.surveyTemplateId JOIN join_surveys_and_questions AS jsq ON jsq.surveyTemplateId = st.id JOIN question_template AS qt ON qt.id = jsq.questionTemplateId JOIN question_option AS qo ON qo.questionTemplateId = qt.id WHERE si.id = ? ORDER BY jsq.questionOrder, qo.order"; 
+				String query = "SELECT * FROM survey_instance where id = ?"; 
 				PreparedStatement ps = connection.prepareStatement(query);
 				ps.setInt(1,surveyInstanceId);
 				ResultSet rs = ps.executeQuery();
+				if(rs.next())
+				{
+					SurveyInstance srvyIns = new SurveyInstance();
+				}
 				while(rs.next())
 				{
 					SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin srvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin = new SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin();
@@ -116,3 +108,5 @@ public class MySQLGetSurveyDAOImpl implements GetSurveyDAO
 				return getSurveysList;
 		}
 	}
+
+}

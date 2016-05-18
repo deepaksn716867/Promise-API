@@ -12,6 +12,7 @@ import edu.asu.poly.promise.dao.CheckSurveyDAO;
 import edu.asu.poly.promise.dao.ConnectionFactory;
 import edu.asu.poly.promise.model.ActivePatients;
 import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
+import edu.asu.poly.promise.model.SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin;
 import edu.asu.poly.promise.model.SurveyInstance;
 import edu.asu.poly.promise.model.SurveyTemplate;
 
@@ -104,19 +105,17 @@ public class MySQLCheckSurveyDAOImpl implements CheckSurveyDAO {
 	}
 	public static void main(String args[])
 	{
-		ArrayList<SrvyInstActivePatientSrvyTempJoin> list = null;
+		ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> list = null;
 		try {
-			list = new MySQLCheckSurveyDAOImpl().checkSurveys(2001);
+			list = new MySQLGetSurveyDAOImpl().getSurveys(1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for(SrvyInstActivePatientSrvyTempJoin eachList : list)
-		{
-			
-			System.out.println(eachList.getActivePatients().getId());
-			System.out.println(eachList.getSurveyInstance().getStartTime());
-			System.out.println(eachList.getSurveyTemplate().getName());
-		}
+			System.out.println("The size::"+list.size());
+			System.out.println(list.get(0).getQuestionoption().getOptionText());
+			System.out.println(list.get(0).getSurveyInstance().getStartTime());
+			System.out.println(list.get(0).getSurveyTemplate().getName());
+			System.out.println(list.get(0).getQuestionoption().getQuestionTemplateId());
 	}
 }

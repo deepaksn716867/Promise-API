@@ -8,6 +8,15 @@ public class SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin {
 	private QuestionOption questionoption = null;
 	private QuestionTemplate questiontemplate = null;
 	
+	public SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin() 
+	{
+		surveyInstance = new SurveyInstance();
+		surveyTemplate = new SurveyTemplate();
+		joinSurveysAndQuestions = new JoinSurveysAndQuestions();
+		questionoption = new QuestionOption();
+		questiontemplate = new QuestionTemplate();
+	}
+	
 	public QuestionOption getQuestionoption() {
 		return questionoption;
 	}
@@ -19,11 +28,6 @@ public class SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin {
 	}
 	public void setQuestiontemplate(QuestionTemplate questiontemplate) {
 		this.questiontemplate = questiontemplate;
-	}
-	public SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin() {
-		surveyInstance = new SurveyInstance();
-		surveyTemplate = new SurveyTemplate();
-		joinSurveysAndQuestions = new JoinSurveysAndQuestions();
 	}
 	public SurveyInstance getSurveyInstance() {
 		return surveyInstance;
@@ -43,8 +47,4 @@ public class SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin {
 	public void setJoinSurveysAndQuestions(JoinSurveysAndQuestions joinSurveysAndQuestions) {
 		this.joinSurveysAndQuestions = joinSurveysAndQuestions;
 	}
-	
-	
-	
-
 }
