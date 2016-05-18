@@ -1,4 +1,4 @@
-package edu.asu.poly.promise.service.dao;
+package edu.asu.poly.promise.dao;
 
 public abstract class DAOFactory {
 	public static final int MYSQL = 0;

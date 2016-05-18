@@ -1,4 +1,4 @@
-package edu.asu.poly.promise.service.dao.impl;
+package edu.asu.poly.promise.dao.impl;
 /**
  * The class is the implementation for the DAO getsurvey service endpoint.
  * It returns the survey for the particular survey instance id.
@@ -11,12 +11,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import edu.asu.poly.promise.dao.ConnectionFactory;
+import edu.asu.poly.promise.dao.GetSurveyDAO;
 import edu.asu.poly.promise.model.ActivePatients;
 import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
 import edu.asu.poly.promise.model.SurveyInstance;
 import edu.asu.poly.promise.model.SurveyTemplate;
-import edu.asu.poly.promise.service.dao.ConnectionFactory;
-import edu.asu.poly.promise.service.dao.GetSurveyDAO;
 
 public class MySQLGetSurveyDAOImpl implements GetSurveyDAO
 {

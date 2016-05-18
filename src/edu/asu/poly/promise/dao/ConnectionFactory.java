@@ -1,4 +1,4 @@
-package edu.asu.poly.promise.service.dao;
+package edu.asu.poly.promise.dao;
 
 import java.io.IOException;
 import java.io.InputStream;

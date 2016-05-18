@@ -1,4 +1,4 @@
-package edu.asu.poly.promise.service.dao;
+package edu.asu.poly.promise.dao;
 
 import java.util.ArrayList;
 import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
@@ -11,5 +11,5 @@ import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
 
 public interface CheckSurveyDAO {
 	
-	public ArrayList<SrvyInstActivePatientSrvyTempJoin> checkSurveysDAO(Integer userPin) throws Exception;
+	public ArrayList<SrvyInstActivePatientSrvyTempJoin> checkSurveys(Integer userPin) throws Exception;
 }

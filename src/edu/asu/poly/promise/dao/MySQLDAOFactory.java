@@ -1,6 +1,6 @@
-package edu.asu.poly.promise.service.dao;
+package edu.asu.poly.promise.dao;
 
-import edu.asu.poly.promise.service.dao.impl.MySQLCheckSurveyDAOImpl;
+import edu.asu.poly.promise.dao.impl.MySQLCheckSurveyDAOImpl;
 
 public class MySQLDAOFactory extends DAOFactory {
 	

@@ -1,4 +1,4 @@
-package edu.asu.poly.promise.service.dao.impl;
+package edu.asu.poly.promise.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,12 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import edu.asu.poly.promise.dao.CheckSurveyDAO;
+import edu.asu.poly.promise.dao.ConnectionFactory;
 import edu.asu.poly.promise.model.ActivePatients;
 import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
 import edu.asu.poly.promise.model.SurveyInstance;
 import edu.asu.poly.promise.model.SurveyTemplate;
-import edu.asu.poly.promise.service.dao.CheckSurveyDAO;
-import edu.asu.poly.promise.service.dao.ConnectionFactory;
 
 /**
  * This class is the DAO Impl for the CheckSurvey endpoint.
