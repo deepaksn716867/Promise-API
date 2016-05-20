@@ -41,7 +41,7 @@ public class PromiseServices {
         
 	    JSONObject checksurveyreply = new JSONObject();
 	    checksurveyreply.put("message", "SUCCESS");
-	    checksurveyreply.put("questions ", surveyarray.toString());
+	    checksurveyreply.put("questions ", surveyarray);
 
 	    
 
@@ -49,13 +49,15 @@ public class PromiseServices {
 
 	}
 	
-	public String getsurveyservice(Integer survey_instance_id)
+	public String getsurveyservice(Integer survey_instance_id) throws Exception
 	{
 		
 
     	DAOFactory factory = DAOFactory.getFactory(DAOFactory.MYSQL);
         GetSurveyDAO getsurvey  = factory.getSurveyDAO();
         ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> result = null;
+        SurveyInstanceDAO surveyinstance= factory.getSurveyInstanceDAO();
+        if(surveyinstance.findSurveyInstance(survey_instance_id)!=null){
 		try {
 			result = getsurvey.getSurveys(survey_instance_id);
 		} catch (Exception e) {
@@ -89,7 +91,7 @@ public class PromiseServices {
 	    	else
 	    	{
 	    	    JSONObject questionoption = new JSONObject();
-	    		questionoption.put("answerOptions", answerarray.toString());
+	    		questionoption.put("answerOptions", answerarray);
 	    		questionoption.put("quesID",quesID );
 	    		questionoption.put("quesType",questType);
 	    		questionoption.put("quesText",questText);
@@ -107,12 +109,17 @@ public class PromiseServices {
 	    	}
 	    }
 	    JSONObject surveyreply = new JSONObject();
-	    surveyreply.put("questions ", questionarray.toString());
+	    surveyreply.put("questions ", questionarray);
 	    surveyreply.put("message", "SUCCESS");
 	    surveyreply.put("SurveyName", result.get(0).getSurveyTemplate().getName());
 	    surveyreply.put("surveyInstanceID", result.get(0).getSurveyTemplate().getId());
 	    
 		return surveyreply.toString().replace("\\","");
+	}
+	else
+	{
+		return "ERROR";
+	}
 	}
 	
 }
