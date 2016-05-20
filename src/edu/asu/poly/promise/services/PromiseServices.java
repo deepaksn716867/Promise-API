@@ -1,7 +1,7 @@
 package edu.asu.poly.promise.services;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,8 +9,6 @@ import org.json.simple.JSONObject;
 import edu.asu.poly.promise.dao.*;
 import edu.asu.poly.promise.dao.DAOFactory;
 import edu.asu.poly.promise.model.*;
-import edu.asu.poly.promise.model.SurveyInstance;
-import edu.asu.poly.promise.model.SurveyTemplate;
 
 public class PromiseServices {
 
@@ -40,24 +38,88 @@ public class PromiseServices {
 		        obj.put("okayToStart",new Boolean(false));
 		    surveyarray.add(obj);        
 		 }
-        return surveyarray.toJSONString();
+        
+	    JSONObject checksurveyreply = new JSONObject();
+	    checksurveyreply.put("message", "SUCCESS");
+	    checksurveyreply.put("questions ", surveyarray);
+
+	    
+
+        return checksurveyreply.toJSONString().replace("\\","");
 
 	}
 	
-	public String getsurveyservice(Integer survey_instance_id)
+	public String getsurveyservice(Integer survey_instance_id) throws Exception
 	{
 		
 
     	DAOFactory factory = DAOFactory.getFactory(DAOFactory.MYSQL);
-        GetSurveyDAO getsurvey  = factory.getGetSurveyDAO();
-        ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> result=getsurvey.getSurvey(survey_instance_id);
-        
-        for(SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin instance:result)
-        {
-        	
-        }
-        
-		return "he";
+        GetSurveyDAO getsurvey  = factory.getSurveyDAO();
+        ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> result = null;
+        SurveyInstanceDAO surveyinstance= factory.getSurveyInstanceDAO();
+        if(surveyinstance.findSurveyInstance(survey_instance_id)!=null){
+		try {
+			result = getsurvey.getSurveys(survey_instance_id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    int previous=result.get(0).getQuestionoption().getQuestionTemplateId();
+		JSONArray answerarray = new JSONArray();
+		JSONArray questionarray = new JSONArray();
+		int quesID=0;
+	    String questType="";
+	    String questText="";
+
+
+
+	    for(SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin instance:result)
+	    {
+	    	QuestionOption qo=instance.getQuestionoption();
+			QuestionTemplate qt=instance.getQuestiontemplate();
+			
+	    	if(previous==qo.getQuestionTemplateId())
+	    	{
+			    JSONObject obj = new JSONObject();
+			    obj.put("answerText", qo.getOptionText());
+			    obj.put("answerID", qo.getId());
+			    answerarray.add(obj);
+			    quesID=qo.getQuestionTemplateId();
+			    questType=qt.getQuestionType();
+			    questText=qt.getQuestionText();
+	    	}
+	    	else
+	    	{
+	    	    JSONObject questionoption = new JSONObject();
+	    		questionoption.put("answerOptions", answerarray);
+	    		questionoption.put("quesID",quesID );
+	    		questionoption.put("quesType",questType);
+	    		questionoption.put("quesText",questText);
+	    		questionarray.add(questionoption);
+	    		answerarray = new JSONArray();
+	    		JSONObject obj = new JSONObject();
+			    obj.put("answerText", qo.getOptionText());
+			    obj.put("answerID", qo.getId());
+			    answerarray.add(obj);
+			    previous=qo.getQuestionTemplateId();
+			    
+	    		
+	    		
+
+	    	}
+	    }
+	    JSONObject surveyreply = new JSONObject();
+	    surveyreply.put("questions ", questionarray);
+	    surveyreply.put("message", "SUCCESS");
+	    surveyreply.put("SurveyName", result.get(0).getSurveyTemplate().getName());
+	    surveyreply.put("surveyInstanceID", result.get(0).getSurveyTemplate().getId());
+	    
+		return surveyreply.toString().replace("\\","");
+	}
+	else
+	{
+		return "ERROR";
+	}
 	}
 	
 }
