@@ -1,7 +1,5 @@
 package edu.asu.poly.promise.dao;
 
-import edu.asu.poly.promise.model.SurveyInstance;
-
 /**
  * This is an abstract factory class for instantiating objects for the DAO.
  * @author Deepak S N
