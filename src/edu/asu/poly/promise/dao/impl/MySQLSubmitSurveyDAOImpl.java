@@ -78,7 +78,7 @@ public class MySQLSubmitSurveyDAOImpl implements SubmitSurveyDAO {
 					ps.setTimestamp(1,subSurvey.TimeStamp);
 					ps.setTimestamp(2,currentTime);
 					ps.setString(3,"completed");
-					ps.setInt(4,subSurvey.SurveyInstanceId);
+					ps.setInt(4,subSurvey.survey_instance_id);
 					
 					updateCount = ps.executeUpdate();
 					System.out.println("The update count is::"+updateCount);

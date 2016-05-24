@@ -7,7 +7,7 @@ import edu.asu.poly.promise.model.QuestionResult;
 
 public interface SubmitSurveyDAO {
 
-	boolean SubmitSurvey(SubmitSurvey subsurvey);
+	boolean SubmitSurvey(SubmitSurvey subsurvey) throws Exception;
 	
 	class SubmitSurvey
 	{
