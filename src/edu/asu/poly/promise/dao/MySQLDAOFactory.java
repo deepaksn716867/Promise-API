@@ -1,6 +1,7 @@
 package edu.asu.poly.promise.dao;
 import edu.asu.poly.promise.dao.impl.MySQLCheckSurveyDAOImpl;
 import edu.asu.poly.promise.dao.impl.MySQLGetSurveyDAOImpl;
+import edu.asu.poly.promise.dao.impl.MySQLQuestionOptionDAOImpl;
 import edu.asu.poly.promise.dao.impl.MySQLSurveyInstanceDAOImpl;
 import edu.asu.poly.promise.model.SurveyInstance;
 
@@ -26,6 +27,11 @@ public class MySQLDAOFactory extends DAOFactory {
 		return new MySQLSurveyInstanceDAOImpl();
 	}
 	
+	@Override
+	public QuestionOptionDAO getQuestionOptionDAO()
+	{
+		return new MySQLQuestionOptionDAOImpl();
+	}
 	
 
 }
