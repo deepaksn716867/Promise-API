@@ -1,10 +1,13 @@
 package edu.asu.poly.promise.services;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import edu.asu.poly.promise.dao.*;
 import edu.asu.poly.promise.dao.DAOFactory;
@@ -122,5 +125,60 @@ public class PromiseServices {
 	}
 	}
 	
+	public String submitsurveyservice(String survey_result) throws ParseException, Exception
+	{
+		
+		ArrayList<QuestionResult> questionResult= new ArrayList();
+		JSONParser parser = new JSONParser();
+		JSONObject json = (JSONObject) parser.parse(survey_result);
+		SubmitSurveyDAO.SubmitSurvey survey_results = new SubmitSurveyDAO.SubmitSurvey();
+		int survey_instance_id=(int) json.get("surveyInstanceID");
+		DAOFactory factory = DAOFactory.getFactory(DAOFactory.MYSQL);
+
+
+		JSONArray question_results=(JSONArray)json.get("SurveyResults");
+		for(int i=0;i<question_results.size();i++)
+		{
+			JSONObject result=(JSONObject) question_results.get(0);
+			QuestionResult qr_instance_location = new QuestionResult();
+			QuestionResult qr_instance_intensity = new QuestionResult();
+			int quesid = (int) result.get("quesid");
+			if(quesid==31)
+			{
+				JSONArray bodypain=(JSONArray)json.get("bodyPain");
+				JSONObject bodypain_instance=(JSONObject) bodypain.get(0);
+				String location= (String) bodypain_instance.get("location");
+				int intensity= (int) bodypain_instance.get("intensity");
+		        QuestionOptionDAO questionOption  = factory.getQuestionOptionDAO();
+		        QuestionOption q_option = questionOption.findByOptionText(location);
+		        qr_instance_location.setQuestionOptionId(q_option.getId());
+		        qr_instance_location.setSurveyInstanceId(survey_instance_id);
+		        q_option = questionOption.findByOptionText(Integer.toString(intensity));
+		        qr_instance_intensity.setQuestionOptionId(q_option.getId());
+		        qr_instance_intensity.setSurveyInstanceId(survey_instance_id);
+		        questionResult.add(qr_instance_location);
+		        questionResult.add(qr_instance_intensity);				
+			
+			}
+			else
+			{
+				QuestionResult qr_instance = new QuestionResult();
+				JSONArray selected_optionsarray = (JSONArray) result.get("selectedOptions");
+				qr_instance.setQuestionOptionId((int) selected_optionsarray.get(0));
+		        qr_instance.setSurveyInstanceId(survey_instance_id);
+		        questionResult.add(qr_instance);
+				
+			}
+			
+			survey_results.TimeStamp=(Timestamp) json.get("timeStamp");
+			survey_results.survey_instance_id= survey_instance_id;
+			survey_results.questionResult.addAll(questionResult);
+			SubmitSurveyDAO submit_survey = factory.getSubmitSurveyDAO();
+			Boolean success = submit_survey.SubmitSurvey(survey_results);
+			
+		}
+		
+		return "hello";
+	}
 }
 

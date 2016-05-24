@@ -47,4 +47,5 @@ public class SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin {
 	public void setJoinSurveysAndQuestions(JoinSurveysAndQuestions joinSurveysAndQuestions) {
 		this.joinSurveysAndQuestions = joinSurveysAndQuestions;
 	}
+
 }
