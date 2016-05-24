@@ -53,14 +53,14 @@ public class MySQLGetSurveyDAOImpl implements GetSurveyDAO
 						int i = 1;
 						
 						srvyIns.setId(rs.getInt(i++));
-						srvyIns.setStartTime(rs.getString(i++));
-						srvyIns.setEndTime(rs.getString(i++));
-						srvyIns.setUserSubmissionTime(rs.getString(i++));
-						srvyIns.setActualSubmissionTime(rs.getString(i++));
+						srvyIns.setStartTime(rs.getTimestamp(i++));
+						srvyIns.setEndTime(rs.getTimestamp(i++));
+						srvyIns.setUserSubmissionTime(rs.getTimestamp(i++));
+						srvyIns.setActualSubmissionTime(rs.getTimestamp(i++));
 						srvyIns.setState(rs.getString(i++));
-						srvyIns.setCreatedAt(rs.getString(i++));
-						srvyIns.setUpdatedAt(rs.getString(i++));
-						srvyIns.setDeletedAt(rs.getString(i++));
+						srvyIns.setCreatedAt(rs.getTimestamp(i++));
+						srvyIns.setUpdatedAt(rs.getTimestamp(i++));
+						srvyIns.setDeletedAt(rs.getTimestamp(i++));
 						srvyIns.setPatientId(rs.getInt(i++));
 						srvyIns.setSurveyTemplateId(rs.getInt(i++));
 						

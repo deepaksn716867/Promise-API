@@ -12,7 +12,6 @@ import edu.asu.poly.promise.dao.CheckSurveyDAO;
 import edu.asu.poly.promise.dao.ConnectionFactory;
 import edu.asu.poly.promise.model.ActivePatients;
 import edu.asu.poly.promise.model.SrvyInstActivePatientSrvyTempJoin;
-import edu.asu.poly.promise.model.SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin;
 import edu.asu.poly.promise.model.SurveyInstance;
 import edu.asu.poly.promise.model.SurveyTemplate;
 
@@ -52,14 +51,14 @@ public class MySQLCheckSurveyDAOImpl implements CheckSurveyDAO {
 				//Since it is join and since we have more than one column having the same name(id),we are using column index instead of column name.
 					int i = 1;
 					srvyIns.setId(rs.getInt(i++));
-					srvyIns.setStartTime(rs.getString(i++));
-					srvyIns.setEndTime(rs.getString(i++));
-					srvyIns.setUserSubmissionTime(rs.getString(i++));
-					srvyIns.setActualSubmissionTime(rs.getString(i++));
+					srvyIns.setStartTime(rs.getTimestamp(i++));
+					srvyIns.setEndTime(rs.getTimestamp(i++));
+					srvyIns.setUserSubmissionTime(rs.getTimestamp(i++));
+					srvyIns.setActualSubmissionTime(rs.getTimestamp(i++));
 					srvyIns.setState(rs.getString(i++));
-					srvyIns.setCreatedAt(rs.getString(i++));
-					srvyIns.setUpdatedAt(rs.getString(i++));
-					srvyIns.setDeletedAt(rs.getString(i++));
+					srvyIns.setCreatedAt(rs.getTimestamp(i++));
+					srvyIns.setUpdatedAt(rs.getTimestamp(i++));
+					srvyIns.setDeletedAt(rs.getTimestamp(i++));
 					srvyIns.setPatientId(rs.getInt(i++));
 					srvyIns.setSurveyTemplateId(rs.getInt(i++));
 					activePtnts.setId(rs.getInt(i++));
@@ -105,17 +104,32 @@ public class MySQLCheckSurveyDAOImpl implements CheckSurveyDAO {
 	}
 	public static void main(String args[])
 	{
-		ArrayList<SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin> list = null;
+		SurveyInstance srvt = null;
 		try {
-			list = new MySQLGetSurveyDAOImpl().getSurveys(1);
+			/*//srvt = new MySQLSurveyInstanceDAOImpl().findSurveyInstance(1);
+			Date date = new Date();
+			Timestamp timeStamp = new Timestamp(date.getDate());
+			System.out.println("The current time is::"+timeStamp);*/
+			/*ArrayList<QuestionResult> list = new ArrayList<QuestionResult>();
+			QuestionResult qr = new QuestionResult();
+			qr.setSurveyInstanceId(5);
+			qr.setQuestionOptionId(90);
+			QuestionResult qr1 = new QuestionResult();
+			qr1.setSurveyInstanceId(5);
+			qr1.setQuestionOptionId(91);
+			list.add(qr);
+			list.add(qr1);
+			Timestamp currentTime = new Timestamp(new Date().getTime());
+			SubmitSurveyDAO.SubmitSurvey sb = new SubmitSurveyDAO.SubmitSurvey();
+			sb.questionResult = list;
+			sb.TimeStamp = currentTime;
+			sb.SurveyInstanceId = 5;
+			boolean result = new MySQLSubmitSurveyDAOImpl().SubmitSurvey(sb);
+			System.out.println("result is::"+result);*/
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			System.out.println("The size::"+list.size());
-			System.out.println(list.get(0).getQuestionoption().getOptionText());
-			System.out.println(list.get(0).getSurveyInstance().getStartTime());
-			System.out.println(list.get(0).getSurveyTemplate().getName());
-			System.out.println(list.get(0).getQuestionoption().getQuestionTemplateId());
+			System.out.println("The id id::"+srvt.getEndTime());
 	}
 }
