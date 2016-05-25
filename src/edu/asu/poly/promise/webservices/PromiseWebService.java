@@ -54,8 +54,7 @@ public class PromiseWebService {
     {
 		Response response=null;
 		String jsonstring=promiseservices.submitsurveyservice(content);
-		response = Response.status(Response.Status.OK).entity(jsonstring).build();
-		
+		response = Response.status(Response.Status.OK).header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With").header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Methods", "GET, PUT, POST").entity(jsonstring).build();		
 		return response;
     }
 	

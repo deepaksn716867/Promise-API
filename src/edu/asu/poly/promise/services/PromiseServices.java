@@ -64,9 +64,9 @@ public class PromiseServices {
         SurveyInstanceDAO surveyinstance= factory.getSurveyInstanceDAO();
         SurveyInstance survey_instance = surveyinstance.findSurveyInstance(survey_instance_id);
         if(survey_instance!=null){
-        	if(timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(survey_instance.getStartTime()))>0)
+        	if(timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(survey_instance.getStartTime()))<0)
         		return "Survey instance is not active";
-        	else if (timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(survey_instance.getEndTime()))<0)
+        	else if (timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(survey_instance.getEndTime()))>0)
         		return "Survey instance has expired";
         	else if (survey_instance.getState().equals("completed"))
         		return "Survey instance has been completed";
@@ -83,13 +83,16 @@ public class PromiseServices {
 		int quesID=0;
 	    String questType="";
 	    String questText="";
+	    QuestionOption qo=null;
+	    QuestionTemplate qt=null;
 
 
-
+	    System.out.println("SIZE"+result.size());
+	    int count=0;
 	    for(SrvyInstSrvyTempJoinSrvyQuestTempQuestOptJoin instance:result)
 	    {
-	    	QuestionOption qo=instance.getQuestionoption();
-			QuestionTemplate qt=instance.getQuestiontemplate();
+	    	qo=instance.getQuestionoption();
+			qt=instance.getQuestiontemplate();
 			
 	    	if(previous==qo.getQuestionTemplateId())
 	    	{
@@ -97,6 +100,8 @@ public class PromiseServices {
 			    obj.put("answerText", qo.getOptionText());
 			    obj.put("answerID", qo.getId());
 			    answerarray.add(obj);
+			    count++;
+			    System.out.println("ADDING"+count);
 			    quesID=qo.getQuestionTemplateId();
 			    questType=qt.getQuestionType();
 			    questText=qt.getQuestionText();
@@ -113,19 +118,24 @@ public class PromiseServices {
 	    		JSONObject obj = new JSONObject();
 			    obj.put("answerText", qo.getOptionText());
 			    obj.put("answerID", qo.getId());
+			    count++;
+			    System.out.println("ADDING"+count);
 			    answerarray.add(obj);
-			    previous=qo.getQuestionTemplateId();
-			    
-	    		
-	    		
-
+			    previous=qo.getQuestionTemplateId();	
 	    	}
 	    }
+	    JSONObject questionoption = new JSONObject();
+		questionoption.put("answerOptions", answerarray);
+		questionoption.put("quesID",qo.getQuestionTemplateId() );
+		questionoption.put("questionType",qt.getQuestionType());
+		questionoption.put("questionText",qt.getQuestionText());
+		questionarray.add(questionoption);
+		
 	    JSONObject surveyreply = new JSONObject();
 	    surveyreply.put("questions", questionarray);
 	    surveyreply.put("message", SUCCESS);
 	    surveyreply.put("surveyName", result.get(0).getSurveyTemplate().getName());
-	    surveyreply.put("surveyInstanceID", result.get(0).getSurveyTemplate().getId());
+	    surveyreply.put("surveyInstanceID", survey_instance_id);
 	    
 		return surveyreply.toString().replace("\\","");
 	}}
