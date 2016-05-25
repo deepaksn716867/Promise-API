@@ -65,12 +65,12 @@ public class MySQLCheckSurveyDAOImpl implements CheckSurveyDAO {
 					activePtnts.setPin(rs.getInt(i++));
 					activePtnts.setDeviceType(rs.getString(i++));
 					activePtnts.setDeviceVersion(rs.getString(i++));
-					activePtnts.setDateStarted(rs.getString(i++));
-					activePtnts.setDateCompleted(rs.getString(i++));
-					activePtnts.setCreatedAt(rs.getString(i++));
-					activePtnts.setUpdatedAt(rs.getString(i++));
-					activePtnts.setDeletedAt(rs.getString(i++));
-					activePtnts.setStageId(rs.getString(i++));
+					activePtnts.setDateStarted(rs.getTimestamp(i++));
+					activePtnts.setDateCompleted(rs.getTimestamp(i++));
+					activePtnts.setCreatedAt(rs.getTimestamp(i++));
+					activePtnts.setUpdatedAt(rs.getTimestamp(i++));
+					activePtnts.setDeletedAt(rs.getTimestamp(i++));
+					activePtnts.setStageId(rs.getInt(i++));
 					srvyTemp.setId(rs.getInt(i++));
 					srvyTemp.setName(rs.getString(i++));
 					srvyTemp.setCreatedAt(rs.getString(i++));
@@ -106,30 +106,15 @@ public class MySQLCheckSurveyDAOImpl implements CheckSurveyDAO {
 	{
 		SurveyInstance srvt = null;
 		try {
-			/*//srvt = new MySQLSurveyInstanceDAOImpl().findSurveyInstance(1);
-			Date date = new Date();
-			Timestamp timeStamp = new Timestamp(date.getDate());
-			System.out.println("The current time is::"+timeStamp);*/
-			/*ArrayList<QuestionResult> list = new ArrayList<QuestionResult>();
-			QuestionResult qr = new QuestionResult();
-			qr.setSurveyInstanceId(5);
-			qr.setQuestionOptionId(90);
-			QuestionResult qr1 = new QuestionResult();
-			qr1.setSurveyInstanceId(5);
-			qr1.setQuestionOptionId(91);
-			list.add(qr);
-			list.add(qr1);
-			Timestamp currentTime = new Timestamp(new Date().getTime());
-			SubmitSurveyDAO.SubmitSurvey sb = new SubmitSurveyDAO.SubmitSurvey();
-			sb.questionResult = list;
-			sb.TimeStamp = currentTime;
-			sb.SurveyInstanceId = 5;
-			boolean result = new MySQLSubmitSurveyDAOImpl().SubmitSurvey(sb);
-			System.out.println("result is::"+result);*/
+			//srvt = new MySQLSurveyInstanceDAOImpl().findSurveyInstance(1);
+			ActivePatients ap = new MySQLActivePatientsDAOImpl().findByUserPin(5000);
+			
+			//boolean result = new MySQLSubmitSurveyDAOImpl().SubmitSurvey(sb);
+			System.out.println("result is::"+ap.getId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("The error is caught");
 		}
-			System.out.println("The id id::"+srvt.getEndTime());
 	}
 }

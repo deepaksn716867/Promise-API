@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriInfo;
 
 import edu.asu.poly.promise.services.PromiseServices;
 
-@Path("/promise")
+@Path("/promis")
 public class PromiseWebService {
 	
 	PromiseServices promiseservices=new PromiseServices();
