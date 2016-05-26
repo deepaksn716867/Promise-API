@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import edu.asu.poly.promise.dao.ConnectionFactory;
 import edu.asu.poly.promise.dao.SurveyInstanceDAO;
+import edu.asu.poly.promise.helper.APIConstants.SrvyState;
 import edu.asu.poly.promise.model.SurveyInstance;
 
 /**
@@ -91,6 +92,54 @@ public class MySQLSurveyInstanceDAOImpl implements SurveyInstanceDAO  {
 			ps.setTimestamp(2,srvyIns.getActualSubmissionTime());
 			ps.setString(3,srvyIns.getState());
 			ps.setInt(4,srvyIns.getId());
+			
+			updateCount = ps.executeUpdate();
+			
+			ps.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			if(ps != null)
+				ps.close();
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				connection.close();
+			}
+			catch (SQLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw e;
+			}
+		}
+		
+		return updateCount>0? true : false;
+	}
+	
+	/**
+	 * This method is used to update the survey instance state.
+	 * @param SurveyInstance -  The survey instance model Obj.
+	 * @param SrvyState - An Enum with state for the surveyInstance State.
+	 * @return Boolean - If the update was successful or not. 
+	 */
+	@Override
+	public boolean updateSurveyInstanceState(SrvyState state,SurveyInstance srvyIns) throws Exception
+	{
+		ConnectionFactory connectionFactory= new ConnectionFactory();
+		Connection connection = connectionFactory.Get_Connection();
+		int updateCount = -1;
+		PreparedStatement ps = null;
+		try
+		{
+			String query = "update survey_instance set state = ? where  id=?";
+			ps = connection.prepareStatement(query);
+			ps.setString(1,state.getValue());
+			ps.setInt(2,srvyIns.getId());
 			
 			updateCount = ps.executeUpdate();
 			

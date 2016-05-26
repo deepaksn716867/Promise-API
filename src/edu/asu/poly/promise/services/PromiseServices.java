@@ -11,6 +11,7 @@ import org.json.simple.parser.ParseException;
 
 import edu.asu.poly.promise.dao.*;
 import edu.asu.poly.promise.dao.DAOFactory;
+import edu.asu.poly.promise.helper.APIConstants.SrvyState;
 import edu.asu.poly.promise.model.*;
 
 public class PromiseServices {
@@ -72,7 +73,8 @@ public class PromiseServices {
         		return "Survey instance has been completed";
         	else{
 		try {
-			result = getsurvey.getSurveys(survey_instance_id);
+			if(surveyinstance.updateSurveyInstanceState(SrvyState.IN_PROGRESS,survey_instance))
+				result = getsurvey.getSurveys(survey_instance_id);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
