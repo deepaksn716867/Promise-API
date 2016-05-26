@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+//import edu.asu.poly.promise.errorhandler.BadRequestCustomException;
 import edu.asu.poly.promise.services.PromiseServices;
 
 @Path("/promis")
@@ -28,9 +29,22 @@ public class PromiseWebService {
 		Response response = null;
     	//ArrayList<SrvyInstActivePatientSrvyTempJoin> result=new ArrayList<>;
         //function call to checksurvey DTO 
-		String jsonstring=promiseservices.checksurveyservice(Integer.parseInt(pin));
-        System.out.println("The request is received");        
-        response = Response.status(Response.Status.OK).entity(jsonstring).build();
+		try
+		{
+			String jsonstring=promiseservices.checksurveyservice(Integer.parseInt(pin));
+	        System.out.println("The request is received");        
+	        response = Response.status(Response.Status.OK).entity(jsonstring).build();
+		}
+		catch(NumberFormatException e)
+		{
+			System.out.println("Throwing the error");
+			e.printStackTrace();
+			//throw new BadRequestCustomException("The user pin is invalid");
+		}
+		catch(Exception e)
+		{
+			
+		}
                 
         return response;
     }
@@ -54,7 +68,7 @@ public class PromiseWebService {
     {
 		Response response=null;
 		String jsonstring=promiseservices.submitsurveyservice(content);
-		response = Response.status(Response.Status.OK).header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With").header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Methods", "GET, PUT, POST").entity(jsonstring).build();		
+		response = Response.status(Response.Status.OK).header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With").header("Access-Control-Allow-Origin", "http://*/").header("Access-Control-Allow-Methods", "GET, PUT, POST").entity(jsonstring).build();		
 		return response;
     }
 	
