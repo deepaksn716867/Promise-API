@@ -18,6 +18,8 @@ public class PromiseServices {
 
 	public static final int BODYPAIN_ID=31;
 	public static final String SUCCESS="SUCCESS";
+	public static final String FAILURE="FAILURE";
+
 	
 	public String checksurveyservice(Integer pin) throws Exception
 	{
@@ -157,58 +159,67 @@ public class PromiseServices {
 		int survey_instance_id= Integer.parseInt(json.get("surveyInstanceID").toString()) ;
 		DAOFactory factory = DAOFactory.getFactory(DAOFactory.MYSQL);
 
-
-		JSONArray question_results=(JSONArray)json.get("surveyResults");
-		for(int i=0;i<question_results.size();i++)
-		{
-			JSONObject result=(JSONObject) question_results.get(i);
-			QuestionResult qr_instance_location = new QuestionResult();
-			QuestionResult qr_instance_intensity = new QuestionResult();
-			int quesid = Integer.parseInt(result.get("quesID").toString());
-			if(quesid==BODYPAIN_ID)
+		SurveyInstanceDAO surveyinstance= factory.getSurveyInstanceDAO();
+        SurveyInstance survey_instance = surveyinstance.findSurveyInstance(survey_instance_id);
+        
+        if(survey_instance!=null)
+        {
+			JSONArray question_results=(JSONArray)json.get("surveyResults");
+			for(int i=0;i<question_results.size();i++)
 			{
-				JSONArray bodypain=(JSONArray)result.get("bodyPain");
-				JSONObject bodypain_instance=(JSONObject) bodypain.get(0);
-				String location= (String) bodypain_instance.get("location");
-				int intensity= Integer.parseInt(bodypain_instance.get("intensity").toString());
-		        QuestionOptionDAO questionOption  = factory.getQuestionOptionDAO();
-		        QuestionOption q_option = questionOption.findByOptionText(location);
-		        qr_instance_location.setQuestionOptionId(q_option.getId());
-		        qr_instance_location.setSurveyInstanceId(survey_instance_id);
-		        q_option = questionOption.findByOptionText(Integer.toString(intensity));
-		        qr_instance_intensity.setQuestionOptionId(q_option.getId());
-		        qr_instance_intensity.setSurveyInstanceId(survey_instance_id);
-		        questionResult.add(qr_instance_location);
-		        questionResult.add(qr_instance_intensity);				
-			
-			}
-			else
-			{
-				QuestionResult qr_instance = new QuestionResult();
-				JSONArray selected_optionsarray = (JSONArray) result.get("selectedOptions");
-				System.out.println("ARRAY SIZE"+selected_optionsarray.size());
-				System.out.println("HERE"+selected_optionsarray.get(0).toString());
-				qr_instance.setQuestionOptionId(Integer.parseInt(selected_optionsarray.get(0).toString()));
-		        qr_instance.setSurveyInstanceId(survey_instance_id);
-		        System.out.println(qr_instance.getSurveyInstanceId());
-		        System.out.println("OPTION"+qr_instance.getQuestionOptionId());
-		        questionResult.add(qr_instance);
+				JSONObject result=(JSONObject) question_results.get(i);
+				QuestionResult qr_instance_location = new QuestionResult();
+				QuestionResult qr_instance_intensity = new QuestionResult();
+				int quesid = Integer.parseInt(result.get("quesID").toString());
+				if(quesid==BODYPAIN_ID)
+				{
+					JSONArray bodypain=(JSONArray)result.get("bodyPain");
+					JSONObject bodypain_instance=(JSONObject) bodypain.get(0);
+					String location= (String) bodypain_instance.get("location");
+					int intensity= Integer.parseInt(bodypain_instance.get("intensity").toString());
+			        QuestionOptionDAO questionOption  = factory.getQuestionOptionDAO();
+			        QuestionOption q_option = questionOption.findByOptionText(location);
+			        qr_instance_location.setQuestionOptionId(q_option.getId());
+			        qr_instance_location.setSurveyInstanceId(survey_instance_id);
+			        q_option = questionOption.findByOptionText(Integer.toString(intensity));
+			        qr_instance_intensity.setQuestionOptionId(q_option.getId());
+			        qr_instance_intensity.setSurveyInstanceId(survey_instance_id);
+			        questionResult.add(qr_instance_location);
+			        questionResult.add(qr_instance_intensity);				
 				
-			}			
-			
-		}
-		survey_results.TimeStamp= new Timestamp((long)json.get("timeStamp"));
-		survey_results.survey_instance_id= survey_instance_id;
-		System.out.println("SIZE"+questionResult.size());
-		survey_results.questionResult=questionResult;
-		SubmitSurveyDAO submit_survey = factory.getSubmitSurveyDAO();
-		Boolean success = submit_survey.SubmitSurvey(survey_results);
-		System.out.println(survey_results.questionResult.size());
-		
-	    JSONObject reply = new JSONObject();
-	    reply.put("statusCode", 500);	    
-		reply.put("message", SUCCESS);
-		return reply.toJSONString();
+				}
+				else
+				{
+					QuestionResult qr_instance = new QuestionResult();
+					JSONArray selected_optionsarray = (JSONArray) result.get("selectedOptions");
+					System.out.println("ARRAY SIZE"+selected_optionsarray.size());
+					System.out.println("HERE"+selected_optionsarray.get(0).toString());
+					qr_instance.setQuestionOptionId(Integer.parseInt(selected_optionsarray.get(0).toString()));
+			        qr_instance.setSurveyInstanceId(survey_instance_id);
+			        System.out.println("OPTION"+qr_instance.getQuestionOptionId());
+			        questionResult.add(qr_instance);
+					
+				}			
+				
+			}
+			survey_results.TimeStamp= new Timestamp((long)json.get("timeStamp"));
+			survey_results.survey_instance_id= survey_instance_id;
+			System.out.println("SIZE"+questionResult.size());
+			survey_results.questionResult=questionResult;
+			SubmitSurveyDAO submit_survey = factory.getSubmitSurveyDAO();
+			Boolean success = submit_survey.SubmitSurvey(survey_results);
+			System.out.println(survey_results.questionResult.size());
+		    JSONObject reply = new JSONObject();
+		    reply.put("statusCode", 500);
+		    if(success)
+		    	reply.put("message", SUCCESS);
+		    else
+		    	reply.put("message", FAILURE);
+			return reply.toJSONString();
+			}
+		else
+			return "Survey_instance does not exist";
 	}
 }
+	
 
