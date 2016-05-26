@@ -5,11 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import edu.asu.poly.promise.dao.ActivePatientsDAO;
 import edu.asu.poly.promise.dao.ConnectionFactory;
 import edu.asu.poly.promise.model.ActivePatients;
 
-public class MySQLActivePatientsDAOImpl {
+public class MySQLActivePatientsDAOImpl implements ActivePatientsDAO {
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.poly.promise.dao.impl.ActivePatientsDAO#findByUserPin(java.lang.Integer)
+	 */
+	@Override
 	public ActivePatients findByUserPin(Integer userPin) throws Exception
 	{
 		ConnectionFactory connectionFactory= new ConnectionFactory();
