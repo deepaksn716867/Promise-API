@@ -20,40 +20,45 @@ public class PromiseServices {
 	public static final String SUCCESS="SUCCESS";
 	public static final String FAILURE="FAILURE";
 
-	
 	public String checksurveyservice(Integer pin) throws Exception
 	{
 		JSONArray surveyarray = new JSONArray();
 
     	DAOFactory factory = DAOFactory.getFactory(DAOFactory.MYSQL);
         CheckSurveyDAO checksurvey  = factory.getCheckSurveyDAO();
-        ArrayList<SrvyInstActivePatientSrvyTempJoin> result=checksurvey.checkSurveys(pin);
-        
-        for(SrvyInstActivePatientSrvyTempJoin instance:result){
-        	
-		    SurveyInstance surveyinstance=instance.getSurveyInstance();
-		    SurveyTemplate surveytemplate=instance.getSurveyTemplate();        
-		    JSONObject obj = new JSONObject();
-		    
-		    obj.put("surveyTitle", surveytemplate.getName());
-		    obj.put("surveyInstanceID",surveyinstance.getId());
-		    obj.put("nextDueAt",surveyinstance.getStartTime().toString());
-		    String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
-		    
-		    if(timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(surveyinstance.getStartTime()))>0 && timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(surveyinstance.getEndTime()))<0)
-		        obj.put("okayToStart",new Boolean(true));
-		    else
-		        obj.put("okayToStart",new Boolean(false));
-		    surveyarray.add(obj);        
-		 }
-        
-	    JSONObject checksurveyreply = new JSONObject();
-	    checksurveyreply.put("message", SUCCESS);
-	    checksurveyreply.put("surveys", surveyarray);
-
-	    
-
-        return checksurveyreply.toJSONString().replace("\\","");
+        ActivePatientsDAO activepatient  = factory.getActivePatientsDAO();
+        ActivePatients activep_instance=activepatient.findByUserPin(pin);
+        if(activep_instance!=null)
+        {
+		    String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());		    
+        	if(timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(activep_instance.getDateStarted()))>0 || timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(activep_instance.getDateCompleted()))<0)
+        	{	
+		        ArrayList<SrvyInstActivePatientSrvyTempJoin> result=checksurvey.checkSurveys(pin);           
+		        for(SrvyInstActivePatientSrvyTempJoin instance:result){        	
+				    SurveyInstance surveyinstance=instance.getSurveyInstance();
+				    SurveyTemplate surveytemplate=instance.getSurveyTemplate();        
+				    JSONObject obj = new JSONObject();		    
+				    obj.put("surveyTitle", surveytemplate.getName());
+				    obj.put("surveyInstanceID",surveyinstance.getId());
+				    obj.put("nextDueAt",surveyinstance.getStartTime().toString());
+				    timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());		    
+				    if(timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(surveyinstance.getStartTime()))>0 && timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(surveyinstance.getEndTime()))<0)
+				        obj.put("okayToStart",new Boolean(true));
+				    else
+				        obj.put("okayToStart",new Boolean(false));
+				    surveyarray.add(obj);        
+				 }
+		        
+			    JSONObject checksurveyreply = new JSONObject();
+			    checksurveyreply.put("message", SUCCESS);
+			    checksurveyreply.put("surveys", surveyarray);
+		        return checksurveyreply.toJSONString().replace("\\","");
+		    }
+        	else
+        		return "Your PIN is not active";
+        }	
+        else
+        	return "The PIN is invalid";
 
 	}
 	
@@ -164,6 +169,8 @@ public class PromiseServices {
         
         if(survey_instance!=null)
         {
+        	if(survey_instance.getState().equals("in progress"))
+        	{
 			JSONArray question_results=(JSONArray)json.get("surveyResults");
 			for(int i=0;i<question_results.size();i++)
 			{
@@ -217,6 +224,9 @@ public class PromiseServices {
 		    	reply.put("message", FAILURE);
 			return reply.toJSONString();
 			}
+        	else
+        		return "Survey_instance has been completed";
+        }
 		else
 			return "Survey_instance does not exist";
 	}

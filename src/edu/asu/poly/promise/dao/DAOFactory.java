@@ -11,6 +11,7 @@ public abstract class DAOFactory {
 	public abstract SurveyInstanceDAO getSurveyInstanceDAO();
 	public abstract QuestionOptionDAO getQuestionOptionDAO();
 	public abstract SubmitSurveyDAO getSubmitSurveyDAO();
+	public abstract ActivePatientsDAO getActivePatientsDAO();
 
 	/**
 	 * This method is a static method which will return the corresponding factory object depending on the type.
