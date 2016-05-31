@@ -14,11 +14,17 @@ import edu.asu.poly.promise.dao.DAOFactory;
 import edu.asu.poly.promise.helper.APIConstants.SrvyState;
 import edu.asu.poly.promise.model.*;
 
+import edu.asu.poly.promise.errorhandler.BadRequestCustomException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.asu.poly.promise.errorhandler.ErrorMessage;
+import edu.asu.poly.promise.errorhandler.NotFoundException;
+
 public class PromiseServices {
 
 	public static final int BODYPAIN_ID=31;
 	public static final String SUCCESS="SUCCESS";
 	public static final String FAILURE="FAILURE";
+	ObjectMapper mapper = new ObjectMapper();
 
 	public String checksurveyservice(Integer pin) throws Exception
 	{
@@ -55,10 +61,19 @@ public class PromiseServices {
 		        return checksurveyreply.toJSONString().replace("\\","");
 		    }
         	else
-        		return "Your PIN is not active";
+        	{
+    			String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"Your PIN is not active"));
+    			System.out.println("The error json"+JsonErrorMessage);
+    			throw new BadRequestCustomException(JsonErrorMessage);    		
+        	}
         }	
         else
-        	return "The PIN is invalid";
+        {
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"The PIN is invalid"));
+			System.out.println("The error json"+JsonErrorMessage);
+			throw new NotFoundException(JsonErrorMessage);    		
+        }
+        	
 
 	}
 	
@@ -73,11 +88,24 @@ public class PromiseServices {
         SurveyInstance survey_instance = surveyinstance.findSurveyInstance(survey_instance_id);
         if(survey_instance!=null){
         	if(timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(survey_instance.getStartTime()))<0)
-        		return "Survey instance is not active";
+        	{
+        		String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"Survey instance is not active"));
+    			System.out.println("The error json"+JsonErrorMessage);
+    			throw new BadRequestCustomException(JsonErrorMessage);    		
+        	
+        	}
         	else if (timeStamp.compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(survey_instance.getEndTime()))>0)
-        		return "Survey instance has expired";
+        	{
+        		String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"Survey instance has expired"));
+    			System.out.println("The error json"+JsonErrorMessage);
+    			throw new NotFoundException(JsonErrorMessage);    
+        	}
         	else if (survey_instance.getState().equals("completed"))
-        		return "Survey instance has been completed";
+        	{
+        		String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"Survey instance has been completed"));
+    			System.out.println("The error json"+JsonErrorMessage);
+    			throw new NotFoundException(JsonErrorMessage);  
+        	}
         	else{
 		try {
 			if(surveyinstance.updateSurveyInstanceState(SrvyState.IN_PROGRESS,survey_instance))
@@ -150,7 +178,9 @@ public class PromiseServices {
 	}}
 	else
 	{
-		return "Invalid survey instance ID";
+		String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"Invalid survey instance ID"));
+		System.out.println("The error json"+JsonErrorMessage);
+		throw new NotFoundException(JsonErrorMessage);  
 	}
 	}
 	
@@ -225,10 +255,18 @@ public class PromiseServices {
 			return reply.toJSONString();
 			}
         	else
-        		return "Survey_instance has been completed";
+        	{
+        		String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"Survey_instance has been completed"));
+    			System.out.println("The error json"+JsonErrorMessage);
+    			throw new NotFoundException(JsonErrorMessage); 
+        	}
         }
 		else
-			return "Survey_instance does not exist";
+		{
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"Survey_instance does not exist"));
+			System.out.println("The error json"+JsonErrorMessage);
+			throw new NotFoundException(JsonErrorMessage); 
+		}
 	}
 }
 	

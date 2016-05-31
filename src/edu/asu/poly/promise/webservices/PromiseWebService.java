@@ -1,6 +1,7 @@
 package edu.asu.poly.promise.webservices;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -9,15 +10,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-<<<<<<< HEAD
-//import edu.asu.poly.promise.errorhandler.BadRequestCustomException;
-=======
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.asu.poly.promise.errorhandler.BadRequestCustomException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.asu.poly.promise.errorhandler.ErrorMessage;
->>>>>>> 389fb3caf364cdbff723f335390f509cab23e2f5
 import edu.asu.poly.promise.services.PromiseServices;
 
 @Path("/promis")
@@ -78,14 +73,9 @@ public class PromiseWebService {
 		Response response=null;
 		String jsonstring=promiseservices.submitsurveyservice(content);
 		response = Response.status(Response.Status.OK)
-				.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With")
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Methods", "GET, PUT, POST")
 				.entity(jsonstring).build();		
 		return response;
     }
-	
-
     
     
 }
