@@ -10,6 +10,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.asu.poly.promise.errorhandler.BadRequestCustomException;
+import edu.asu.poly.promise.errorhandler.ErrorMessage;
 import edu.asu.poly.promise.services.PromiseServices;
 
 @Path("/promis")
@@ -26,11 +30,26 @@ public class PromiseWebService {
     public Response checksurveys(@PathParam("pin") String pin) throws NumberFormatException, Exception
     {
 		Response response = null;
-    	//ArrayList<SrvyInstActivePatientSrvyTempJoin> result=new ArrayList<>;
-        //function call to checksurvey DTO 
-		String jsonstring=promiseservices.checksurveyservice(Integer.parseInt(pin));
-        System.out.println("The request is received");        
-        response = Response.status(Response.Status.OK).entity(jsonstring).build();
+		
+		try
+		{
+			String jsonstring=promiseservices.checksurveyservice(Integer.parseInt(pin));
+	        System.out.println("The request is received");        
+	        response = Response.status(Response.Status.OK).entity(jsonstring).build();
+		}
+		catch(NumberFormatException e)
+		{
+			e.printStackTrace();
+			ObjectMapper mapper = new ObjectMapper();
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorMessage(404,"The user pin is invalid"));
+			System.out.println("The error json"+JsonErrorMessage);
+			throw new BadRequestCustomException(JsonErrorMessage);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
                 
         return response;
     }
